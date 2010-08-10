@@ -5,7 +5,7 @@ use warnings;
 
 use base 'Mojo::Base';
 
-our $VERSION = '0.0002';
+our $VERSION = '0.0003';
 
 use MojoX::Validator::Field;
 use MojoX::Validator::Group;
@@ -209,7 +209,7 @@ MojoX::Validator - Validator for Mojolicious
     $validator->field('document');
     $validator->field('number');
     $validator->when('document')->regexp(qr/^1$/)
-      ->then(sub { shift->field('number')->required });
+      ->then(sub { shift->field('number')->required(1) });
 
     $validator->validate($values_hashref);
     my $errors_hashref = $validator->errors;
