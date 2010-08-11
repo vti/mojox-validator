@@ -5,10 +5,10 @@ use warnings;
 
 use Test::More tests => 9;
 
-use MojoX::Validator::Constraint::Single::Subset;
+use MojoX::Validator::Constraint::Subset;
 
 my $constraint =
-  MojoX::Validator::Constraint::Single::Subset->new(args => [1, 5, 7]);
+  MojoX::Validator::Constraint::Subset->new(args => [1, 5, 7]);
 
 ok($constraint);
 

@@ -8,7 +8,7 @@ use MojoX::Validator;
 use Test::More tests => 6;
 
 my $validator = MojoX::Validator->new;
-$validator->field([qw/foo bar/])->length(1, 3);
+$validator->field([qw/foo bar/])->each(sub { shift->length(1, 3) });
 
 $validator->when('bar')->regexp(qr/^\d+$/)
   ->then(sub { shift->field('foo')->required(1) });

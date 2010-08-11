@@ -1,4 +1,4 @@
-package MojoX::Validator::Constraint::Group::Unique;
+package MojoX::Validator::Constraint::Unique;
 
 use strict;
 use warnings;
@@ -6,6 +6,8 @@ use warnings;
 use base 'MojoX::Validator::Constraint';
 
 sub error {'Values are not unique'}
+
+sub is_single {0}
 
 sub is_valid {
     my ($self, $values) = @_;

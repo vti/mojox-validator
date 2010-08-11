@@ -11,8 +11,8 @@ __PACKAGE__->attr(matched => 0);
 __PACKAGE__->attr(then    => sub { });
 __PACKAGE__->attr(bulks   => sub { [] });
 
-sub regexp {shift->constraint('single-regexp' => @_)}
-sub length {shift->constraint('single-length' => @_)}
+sub regexp {shift->constraint('regexp' => @_)}
+sub length {shift->constraint('length' => @_)}
 
 sub when {
     my $self   = shift;

@@ -5,9 +5,9 @@ use warnings;
 
 use Test::More tests => 9;
 
-use MojoX::Validator::Constraint::Single::Time;
+use MojoX::Validator::Constraint::Time;
 
-my $constraint = MojoX::Validator::Constraint::Single::Time->new(args => 1);
+my $constraint = MojoX::Validator::Constraint::Time->new(args => 1);
 
 ok($constraint);
 

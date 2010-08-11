@@ -5,9 +5,9 @@ use warnings;
 
 use Test::More tests => 4;
 
-use MojoX::Validator::Constraint::Single::In;
+use MojoX::Validator::Constraint::In;
 
-my $constraint = MojoX::Validator::Constraint::Single::In->new(args => [1, 5, 7]);
+my $constraint = MojoX::Validator::Constraint::In->new(args => [1, 5, 7]);
 
 ok($constraint);
 

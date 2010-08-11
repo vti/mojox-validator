@@ -1,4 +1,4 @@
-package MojoX::Validator::Constraint::Single::Length;
+package MojoX::Validator::Constraint::Length;
 
 use strict;
 use warnings;

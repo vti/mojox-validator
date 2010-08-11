@@ -5,10 +5,10 @@ use warnings;
 
 use Test::More tests => 4;
 
-use MojoX::Validator::Constraint::Single::Length;
+use MojoX::Validator::Constraint::Length;
 
 my $constraint =
-  MojoX::Validator::Constraint::Single::Length->new(args => [3, 5]);
+  MojoX::Validator::Constraint::Length->new(args => [3, 5]);
 
 ok($constraint);
 

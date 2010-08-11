@@ -8,6 +8,7 @@ use base 'Mojo::Base';
 __PACKAGE__->attr('error' => 'Invalid input');
 __PACKAGE__->attr('args');
 
-sub is_valid {0}
+sub is_single {1}
+sub is_valid  {0}
 
 1;

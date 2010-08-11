@@ -5,9 +5,9 @@ use warnings;
 
 use Test::More tests => 5;
 
-use MojoX::Validator::Constraint::Group::Equal;
+use MojoX::Validator::Constraint::Equal;
 
-my $constraint = MojoX::Validator::Constraint::Group::Equal->new;
+my $constraint = MojoX::Validator::Constraint::Equal->new;
 
 ok($constraint);
 

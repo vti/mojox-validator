@@ -1,4 +1,4 @@
-package MojoX::Validator::Constraint::Single::Date;
+package MojoX::Validator::Constraint::Date;
 
 use strict;
 use warnings;

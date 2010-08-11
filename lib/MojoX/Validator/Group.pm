@@ -12,8 +12,8 @@ __PACKAGE__->attr('error');
 __PACKAGE__->attr(constraints => sub { [] });
 __PACKAGE__->attr(fields => sub { [] });
 
-sub unique { shift->constraint('group-unique') }
-sub equal  { shift->constraint('group-equal') }
+sub unique { shift->constraint('unique') }
+sub equal  { shift->constraint('equal') }
 
 sub constraint {
     my $self = shift;

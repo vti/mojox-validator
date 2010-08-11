@@ -1,4 +1,4 @@
-package MojoX::Validator::Constraint::Single::Email;
+package MojoX::Validator::Constraint::Email;
 
 use strict;
 use warnings;

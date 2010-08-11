@@ -5,11 +5,12 @@ use warnings;
 
 use base 'Mojo::Base';
 
-our $VERSION = '0.0003';
+our $VERSION = '0.0004';
 
+use MojoX::Validator::Bulk;
+use MojoX::Validator::Condition;
 use MojoX::Validator::Field;
 use MojoX::Validator::Group;
-use MojoX::Validator::Condition;
 
 __PACKAGE__->attr('fields'     => sub { {} });
 __PACKAGE__->attr('bulk');
@@ -21,40 +22,25 @@ __PACKAGE__->attr(trim         => 1);
 sub field {
     my $self = shift;
 
+    # Return field if it is already created
     return $self->{fields}->{$_[0]}
-      if ref($_[0]) ne 'ARRAY' && $self->{fields}->{$_[0]};
+      if @_ == 1 && ref($_[0]) ne 'ARRAY' && $self->{fields}->{$_[0]};
 
-    my $names = shift;
-    $names = [$names] unless ref($names) eq 'ARRAY';
+    # Accept array or arrayref
+    my @names = @_ == 1 && ref($_[0]) eq 'ARRAY' ? @{$_[0]} : @_;
 
-    foreach my $name (@$names) {
+    my $fields = [];
+    foreach my $name (@names) {
         my $field = MojoX::Validator::Field->new(name => $name);
 
         $self->fields->{$name} = $field;
+        push @$fields, $field;
     }
 
-    $self->bulk($names);
+    return $self->fields->{$names[0]} if @names == 1;
 
-    return $self;
+    return MojoX::Validator::Bulk->new(fields => $fields);
 }
-
-sub _each {
-    my $self   = shift;
-    my $method = shift;
-
-    foreach my $name (@{$self->bulk}) {
-        $self->field($name)->$method(@_);
-    }
-
-
-    return $self;
-}
-
-sub required { shift->_each(required => @_) }
-sub length   { shift->_each(length   => @_) }
-sub regexp   { shift->_each(regexp   => @_) }
-sub email    { shift->_each(email    => @_) }
-sub callback { shift->_each(callback => @_) }
 
 sub when {
     my $self = shift;
@@ -198,11 +184,13 @@ MojoX::Validator - Validator for Mojolicious
     my $validator = MojoX::Validator->new;
 
     # Fields
-    $validator->field([qw/firstname lastname/])->required(1)->length(3, 20);
     $validator->field('phone')->required(1)->regexp(qr/^\d+$/);
+    $validator->field([qw/firstname lastname/])
+      ->each(sub { shift->required(1)->length(3, 20) });
 
     # Groups
-    $validator->field([qw/password confirm_password/])->required(1);
+    $validator->field([qw/password confirm_password/])
+      ->each(sub { shift->required(1) });
     $validator->group('passwords' => [qw/password confirm_password/])->equal;
 
     # Conditions
@@ -216,6 +204,110 @@ MojoX::Validator - Validator for Mojolicious
     my $validated_values_hashref = $validator->values;
 
 =head1 DESCRIPTION
+
+Data validator. Validates only the data. B<NO> form generation, B<NO> javascript
+generation, B<NO> other stuff that does something else. Only data validation!
+
+=head1 FEATURES
+
+=over
+
+    * Validates data that is presented as a hash reference
+    * Multiple values
+    * Field registration
+    * Group validation
+    * Conditional validation
+
+=back
+
+=head1 CONVENTIONS
+
+=over
+
+    * A value is considered empty when its value is B<NOT> C<undef>, C<''> or
+    contains only spaces
+    * If a value is not required and during validation is empty there is B<NO>
+    error
+    * If a value is passed as an array reference and an appropriate field is
+    not multiple, than only the first value is taken, otherwise every value of
+    the array reference is checked.
+
+=back
+
+=head1 ATTRIBUTES
+
+=head2 C<trim>
+
+Trim field values. B<ON> by default.
+
+=head1 METHODS
+
+=head2 C<new>
+
+    my $validator = MojoX::Validator->new;
+
+Created a new L<MojoX::Validator> object.
+
+=head2 C<field>
+
+    $validator->field('foo');               # MojoX::Validator::Field object is returned
+    $validator->field('foo');               # Already created field object is returned
+
+    $validator->field(qw/foo bar baz/);     # MojoX::Validator::Bulk object is returned
+    $validator->field([qw/foo bar baz/]);   # MojoX::Validator::Bulk object is returned
+
+When a single value is passed creates L<MojoX::Validator::Field> object or
+returns an already created field object.
+
+When an array or an array reference is passed returns L<MojoX::Validator::Bulk> object. You can
+call C<each> method to apply setting to multiple fields.
+
+    $validator->field(qw/foo bar baz/)->each(sub { shift->required(1) });
+
+=head2 C<group>
+
+    $validator->field(qw/foo bar/)->each(sub { shift->required(1) });
+    $validator->group('all_or_none' => [qw/foo bar/])->equal;
+
+Registers a group constraint that will be called on group of fields. If group
+validation failes the C<errors> hashref will have the B<group> name with an
+appropriate error message, B<NOT> fields' names.
+
+=head2 C<when>
+
+    $validator->field('document');
+    $validator->field('number');
+    $validator->when('document')->regexp(qr/^1$/)
+      ->then(sub { shift->field('number')->required(1) });
+
+Registers a condition that is called when some conditions are met. You can do
+whatever you want in condition's callback. Validation will be remade.
+
+=head2 C<validate>
+
+    $validator->validate({a => 'b'});
+    $validator->validate({a => ['b', 'c']});
+    $validator->validate({a => ['b', 'c'], b => 'd'});
+
+Accepts and validated a hash reference that represents data that is being
+validated. Hash values can be either a C<SCALAR> value or an C<ARRAREF> value,
+which means that a field has multiple values. In case of an array reference, it
+is checked if a field can have multiple values. Otherwise only the first value
+is accepted and returned when C<values> method is called.
+
+=head2 C<errors>
+
+    $validator->errors; # {a => 'Required'}
+
+Returns a hash reference of errors.
+
+=head2 C<values>
+
+    $validator->values;
+
+Returns a hash reference of validated values. Only registered fields are returned,
+that means that if some other values were passed to the C<validate> method they
+are ignored.
 
 =head1 DEVELOPMENT
 

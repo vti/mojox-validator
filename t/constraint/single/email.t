@@ -5,9 +5,9 @@ use warnings;
 
 use Test::More tests => 10;
 
-use MojoX::Validator::Constraint::Single::Email;
+use MojoX::Validator::Constraint::Email;
 
-my $constraint = MojoX::Validator::Constraint::Single::Email->new;
+my $constraint = MojoX::Validator::Constraint::Email->new;
 
 ok($constraint);
 

@@ -5,9 +5,9 @@ use warnings;
 
 use Test::More tests => 3;
 
-use MojoX::Validator::Constraint::Single::Callback;
+use MojoX::Validator::Constraint::Callback;
 
-my $constraint = MojoX::Validator::Constraint::Single::Callback->new(
+my $constraint = MojoX::Validator::Constraint::Callback->new(
     args => sub {
         my $value = shift;
 

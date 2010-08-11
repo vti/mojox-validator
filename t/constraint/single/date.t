@@ -5,10 +5,10 @@ use warnings;
 
 use Test::More tests => 5;
 
-use MojoX::Validator::Constraint::Single::Date;
+use MojoX::Validator::Constraint::Date;
 
 my $constraint =
-  MojoX::Validator::Constraint::Single::Date->new(args => {split => qr/\//});
+  MojoX::Validator::Constraint::Date->new(args => {split => qr/\//});
 
 ok($constraint);
 

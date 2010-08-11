@@ -1,4 +1,4 @@
-package MojoX::Validator::Constraint::Single::Callback;
+package MojoX::Validator::Constraint::Regexp;
 
 use strict;
 use warnings;
@@ -10,9 +10,9 @@ sub error {'Wrong format'}
 sub is_valid {
     my ($self, $value) = @_;
 
-    my $cb = $self->args;
+    my $re = $self->args;
 
-    return $cb->($value);
+    return $value =~ m/$re/ ? 1 : 0;
 }
 
 1;
