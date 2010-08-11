@@ -27,3 +27,30 @@ sub is_valid {
 }
 
 1;
+__END__
+
+=head1 NAME
+
+MojoX::Validator::Constraint::Email - Email constraint
+
+=head1 SYNOPSIS
+
+    $validator->field('email')->email;
+
+=head1 DESCRIPTION
+
+Checks whether a value looks like an email address. This is a very simple yet
+correct validation. It checks if an email has a correct length (name and domain) and
+has at least one dot in the domain.
+
+=head1 METHODS
+
+=head2 C<is_valid>
+
+Validates the constraint.
+
+=head1 SEE ALSO
+
+L<MojoX::Validator>, L<MojoX::Constraint>
+
+=cut

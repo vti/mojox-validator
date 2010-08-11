@@ -13,23 +13,23 @@ $field->length([3, 20]);
 $field->regexp(qr/^\d+$/);
 
 ok(!$field->is_valid);
-is($field->error, 'Required');
+is($field->error, 'REQUIRED');
 
 $field->value('');
 ok(!$field->is_valid);
-is($field->error, 'Required');
+is($field->error, 'REQUIRED');
 
 $field->value('   ');
 ok(!$field->is_valid);
-is($field->error, 'Required');
+is($field->error, 'REQUIRED');
 
 $field->value('ab');
 ok(!$field->is_valid);
-is($field->error, 'Wrong length');
+is($field->error, 'LENGTH_CONSTRAINT_FAILED');
 
 $field->value('abc');
 ok(!$field->is_valid);
-is($field->error, 'Wrong format');
+is($field->error, 'REGEXP_CONSTRAINT_FAILED');
 
 $field->value(123);
 ok($field->is_valid);
@@ -43,7 +43,7 @@ ok(!$field->error);
 
 $field->value('ab');
 ok(!$field->is_valid);
-is($field->error, 'Wrong length');
+is($field->error, 'LENGTH_CONSTRAINT_FAILED');
 
 $field->value('abc');
 ok($field->is_valid);
@@ -55,7 +55,7 @@ $field->length([3, 20]);
 $field->value([qw/fo bar/]);
 is($field->value, 'fo');
 ok(!$field->is_valid);
-is($field->error, 'Wrong length');
+is($field->error, 'LENGTH_CONSTRAINT_FAILED');
 
 $field->value([qw/foo ba/]);
 is($field->value, 'foo');

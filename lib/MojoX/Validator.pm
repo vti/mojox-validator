@@ -66,15 +66,6 @@ sub group {
     return $group;
 }
 
-sub condition {
-    my $self = shift;
-
-    my $cond = MojoX::Validator::Condition->new;
-    push @{$self->conditions}, $cond;
-
-    return $cond;
-}
-
 sub errors {
     my ($self) = @_;
 
@@ -115,11 +106,11 @@ sub validate {
 
     $self->clear_errors;
 
-    $self->populate_fields($params);
+    $self->_populate_fields($params);
 
     while (1) {
-        $self->validate_fields;
-        $self->validate_groups;
+        $self->_validate_fields;
+        $self->_validate_groups;
 
         my @conditions = grep {!$_->matched && $_->match($self->fields)} @{$self->conditions};
         last unless @conditions;
@@ -132,7 +123,7 @@ sub validate {
     return $self->has_errors ? 0 : 1;
 }
 
-sub populate_fields {
+sub _populate_fields {
     my $self = shift;
     my $params = shift;
 
@@ -143,7 +134,7 @@ sub populate_fields {
     }
 }
 
-sub validate_fields {
+sub _validate_fields {
     my $self = shift;
     my $params = shift;
 
@@ -152,7 +143,7 @@ sub validate_fields {
     }
 }
 
-sub validate_groups {
+sub _validate_groups {
     my $self = shift;
 
     foreach my $group (@{$self->groups}) {
@@ -247,6 +238,12 @@ Trim field values. B<ON> by default.
     my $validator = MojoX::Validator->new;
 
 Created a new L<MojoX::Validator> object.
+
+=head2 C<clear_errors>
+
+    $validator->clear_errors;
+
+    Clear errors.
 
 =head2 C<field>
 

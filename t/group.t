@@ -20,4 +20,4 @@ $bar->value(1);
 $group = MojoX::Validator::Group->new(fields => [$foo, $bar]);
 $group->unique;
 ok(!$group->is_valid);
-is($group->error, 'Values are not unique');
+is($group->error, 'UNIQUE_CONSTRAINT_FAILED');

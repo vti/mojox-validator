@@ -5,10 +5,6 @@ use warnings;
 
 use base 'MojoX::Validator::Constraint';
 
-sub error {'Values are not equal'}
-
-sub is_single {0}
-
 sub is_valid {
     my ($self, $values) = @_;
 
@@ -24,3 +20,29 @@ sub is_valid {
 }
 
 1;
+__END__
+
+=head1 NAME
+
+MojoX::Validator::Constraint::Equal - Equal constraint
+
+=head1 SYNOPSIS
+
+    $validator->group('all_are_equal' => [qw/password confirm_password/])
+      ->equal;
+
+=head1 DESCRIPTION
+
+Group constraint that validates that all values are the same.
+
+=head1 METHODS
+
+=head2 C<is_valid>
+
+Validates the constraint.
+
+=head1 SEE ALSO
+
+L<MojoX::Validator>, L<MojoX::Constraint>
+
+=cut

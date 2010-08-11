@@ -19,3 +19,30 @@ sub each {
 }
 
 1;
+__END__
+
+=head1 NAME
+
+MojoX::Validator::Bulk - Internal object for multiple fields processing
+
+=head1 SYNOPSIS
+
+    $validator->field(qw//)->each(sub { shift->required(1) });
+
+=head1 DESCRIPTION
+
+Bulk object. Holds multiple fields that were created by L<MojoX::Validator>.
+
+=head1 METHODS
+
+=head2 C<each>
+
+    $bulk->each(sub { shift->required(1) });
+
+Every field is passed to this callback as the first parameter.
+
+=head1 SEE ALSO
+
+L<MojoX::Validator>
+
+=cut

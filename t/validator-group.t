@@ -16,13 +16,13 @@ $validator->group('passwords' => [qw/password confirm_password/])->equal;
 
 ok(!$validator->validate({}));
 is_deeply($validator->errors,
-    {password => 'Required', confirm_password => 'Required'});
+    {password => 'REQUIRED', confirm_password => 'REQUIRED'});
 
 ok(!$validator->validate({password => 'foo'}));
-is_deeply($validator->errors, {confirm_password => 'Required'});
+is_deeply($validator->errors, {confirm_password => 'REQUIRED'});
 
 ok(!$validator->validate({password => 'foo', confirm_password => 'bar'}));
-is_deeply($validator->errors, {passwords => 'Values are not equal'});
+is_deeply($validator->errors, {passwords => 'EQUAL_CONSTRAINT_FAILED'});
 
 ok($validator->validate({password => 'foo', confirm_password => 'foo'}));
 is_deeply($validator->errors, {});
@@ -32,7 +32,7 @@ $validator->field([qw/foo bar/]);
 $validator->group('all_or_none' => [qw/foo bar/])->equal;
 ok($validator->validate({}));
 ok(!$validator->validate({foo => 1}));
-is_deeply($validator->errors, {all_or_none => 'Values are not equal'});
+is_deeply($validator->errors, {all_or_none => 'EQUAL_CONSTRAINT_FAILED'});
 ok(!$validator->validate({bar => 1}));
-is_deeply($validator->errors, {all_or_none => 'Values are not equal'});
+is_deeply($validator->errors, {all_or_none => 'EQUAL_CONSTRAINT_FAILED'});
 ok($validator->validate({foo => 1, bar => 1}));

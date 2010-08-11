@@ -69,3 +69,65 @@ sub match {
 }
 
 1;
+__END__
+
+=head1 NAME
+
+MojoX::Validator::Condition - Condition object
+
+=head1 SYNOPSIS
+
+    $validator->when('document')->regexp(qr/^1$/)
+      ->then(sub { shift->field('number')->required(1) });
+
+=head1 DESCRIPTION
+
+Condition object.
+
+=head1 ATTRIBUTES
+
+=head2 C<then>
+
+    $condition->then(sub { ... });
+
+Holds callback that is called when conditions is matched.
+
+=head1 METHODS
+
+=head2 C<constraint>
+
+    $condition->consraint(length => [1, 3]);
+
+Adds a constraint.
+
+=head2 C<length>
+
+Shortcut
+
+    $condition->consraint(length => @_);
+
+=head2 C<match>
+
+    my $matched = $condition->match;
+
+Check whether conditions is matched.
+
+=head2 C<regexp>
+
+Shortcut
+
+    $condition->consraint(regexp => @_);
+
+=head2 C<when>
+
+    $condition->when('foo');
+    $condition->when(qw/foo bar/);
+    $condition->when([qw/foo bar baz/]);
+
+Adds fields which values are checked to match the condition.
+
+=head1 SEE ALSO
+
+L<MojoX::Validator>, L<MojoX::Validator::Field>, L<MojoX::Validator::Constraint>
+
+=cut
