@@ -22,7 +22,7 @@ sub build {
           : qq/Class "$class" doesn't exist./;
     }
 
-    return $class->new(args => @_ > 1 ? [@_] : $_[0]);
+    return $class->new(args => @_ > 1 ? [@_] : ($_[0] || []));
 }
 
 1;

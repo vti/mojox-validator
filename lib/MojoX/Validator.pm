@@ -5,7 +5,7 @@ use warnings;
 
 use base 'Mojo::Base';
 
-our $VERSION = '0.0004';
+our $VERSION = '0.0005';
 
 use MojoX::Validator::Bulk;
 use MojoX::Validator::Condition;
@@ -201,25 +201,31 @@ generation, B<NO> other stuff that does something else. Only data validation!
 
 =head1 FEATURES
 
-=over
+=over 4
 
-    * Validates data that is presented as a hash reference
-    * Multiple values
-    * Field registration
-    * Group validation
-    * Conditional validation
+    Validates data that is presented as a hash reference
+
+    Multiple values
+
+    Field registration
+
+    Group validation
+
+    Conditional validation
 
 =back
 
 =head1 CONVENTIONS
 
-=over
+=over 4
 
-    * A value is considered empty when its value is B<NOT> C<undef>, C<''> or
+    A value is considered empty when its value is B<NOT> C<undef>, C<''> or
     contains only spaces
-    * If a value is not required and during validation is empty there is B<NO>
+
+    If a value is not required and during validation is empty there is B<NO>
     error
-    * If a value is passed as an array reference and an appropriate field is
+
+    If a value is passed as an array reference and an appropriate field is
     not multiple, than only the first value is taken, otherwise every value of
     the array reference is checked.
 
@@ -243,7 +249,7 @@ Created a new L<MojoX::Validator> object.
 
     $validator->clear_errors;
 
-    Clear errors.
+Clears errors.
 
 =head2 C<field>
 

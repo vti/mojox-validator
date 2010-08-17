@@ -7,7 +7,7 @@ use base 'Mojo::Base';
 
 use Mojo::ByteStream;
 
-__PACKAGE__->attr('args');
+__PACKAGE__->attr('args' => sub { [] });
 
 sub is_valid {0}
 

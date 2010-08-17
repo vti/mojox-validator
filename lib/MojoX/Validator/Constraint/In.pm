@@ -8,7 +8,7 @@ use base 'MojoX::Validator::Constraint';
 sub is_valid {
     my ($self, $value) = @_;
 
-    return grep { $value eq $_ } @{$self->args};
+    return (grep { $value eq $_ } @{$self->args}) ? 1 : 0;
 }
 
 1;

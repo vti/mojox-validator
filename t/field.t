@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 29;
+use Test::More tests => 35;
 
 use_ok('MojoX::Validator::Field');
 
@@ -69,4 +69,15 @@ ok(!$field->is_valid);
 
 $field->value([qw/foo bar/]);
 is_deeply($field->value, [qw/foo bar/]);
+ok($field->is_valid);
+
+$field = MojoX::Validator::Field->new(name => 'foo');
+$field->required(1)->in(0, 1);
+ok(!$field->is_defined);
+ok($field->is_empty);
+ok(!$field->is_valid);
+
+$field->value(0);
+ok($field->is_defined);
+ok(!$field->is_empty);
 ok($field->is_valid);

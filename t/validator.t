@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 9;
+use Test::More tests => 10;
 
 use MojoX::Validator;
 
@@ -28,3 +28,7 @@ is_deeply($validator->values, {});
 # Optional field is wrong
 ok(!$validator->validate({fisrtname => 'foo', website => '12'}));
 is_deeply($validator->values, {website => '12'});
+
+$validator = MojoX::Validator->new;
+$validator->field('foo')->in(0, 1);
+ok($validator->validate({foo => 0}));
