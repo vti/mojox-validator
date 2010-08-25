@@ -5,7 +5,7 @@ use warnings;
 
 use base 'Mojo::Base';
 
-our $VERSION = '0.0005';
+our $VERSION = '0.0006';
 
 use MojoX::Validator::Bulk;
 use MojoX::Validator::Condition;
@@ -157,7 +157,8 @@ sub values {
     my $values = {};
 
     foreach my $field (values %{$self->fields}) {
-        $values->{$field->name} = $field->value if defined $field->value;
+        $values->{$field->name} = $field->value
+          if defined $field->value && !$field->error;
     }
 
     return $values;
@@ -273,7 +274,7 @@ call C<each> method to apply setting to multiple fields.
     $validator->group('all_or_none' => [qw/foo bar/])->equal;
 
 Registers a group constraint that will be called on group of fields. If group
-validation failes the C<errors> hashref will have the B<group> name with an
+validation fails the C<errors> hashref will have the B<group> name with an
 appropriate error message, B<NOT> fields' names.
 
 =head2 C<when>
