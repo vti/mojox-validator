@@ -27,7 +27,7 @@ MojoX::Validator::Bulk - Internal object for multiple fields processing
 
 =head1 SYNOPSIS
 
-    $validator->field(qw//)->each(sub { shift->required(1) });
+    $validator->field(qw/foo bar/)->each(sub { shift->required(1) });
 
 =head1 DESCRIPTION
 

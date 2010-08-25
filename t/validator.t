@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More tests => 11;
 
 use MojoX::Validator;
 
@@ -33,3 +33,7 @@ is_deeply($validator->values, {firstname => 'foo'});
 $validator = MojoX::Validator->new;
 $validator->field('foo')->in(0, 1);
 ok($validator->validate({foo => 0}));
+
+$validator = MojoX::Validator->new;
+$validator->field('firstname')->each(sub { shift->required(1) });
+ok($validator->validate({firstname => 'foo'}));

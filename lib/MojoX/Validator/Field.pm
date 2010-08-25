@@ -5,6 +5,7 @@ use warnings;
 
 use base 'Mojo::Base';
 
+use MojoX::Validator::Bulk;
 use MojoX::Validator::ConstraintBuilder;
 
 __PACKAGE__->attr('name');
@@ -95,6 +96,13 @@ sub clear_value {
     delete $self->{value};
 }
 
+sub each {
+    my $self = shift;
+
+    my $bulk = MojoX::Validator::Bulk->new(fields => [$self]);
+    return $bulk->each(@_);
+}
+
 sub is_defined {
     my ($self) = @_;
 
@@ -134,6 +142,13 @@ Field object. Used internally.
     my $error = $field->error;
 
 Field error.
+
+=head2 C<each>
+
+    $field->each(sub { shift->required(1) });
+
+Each method as described in L<MojoX::Validator::Bulk>. Added here for
+convenience.
 
 =head2 C<multiple>
 
