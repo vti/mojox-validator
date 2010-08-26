@@ -12,6 +12,8 @@ use MojoX::Validator::Condition;
 use MojoX::Validator::Field;
 use MojoX::Validator::Group;
 
+require Carp;
+
 __PACKAGE__->attr('fields'     => sub { {} });
 __PACKAGE__->attr('bulk');
 __PACKAGE__->attr('groups'     => sub { [] });
@@ -56,6 +58,11 @@ sub group {
     my $self   = shift;
     my $name   = shift;
     my $fields = shift;
+
+    if (my($exists) = grep { $_->name eq $name } @{$self->groups} ) {
+        Carp::croak "Fields of group '$name' already defined." if $fields;
+        return $exists;
+    }
 
     $fields = [map { $self->fields->{$_} } @$fields];
 
@@ -193,6 +200,7 @@ MojoX::Validator - Validator for Mojolicious
 
     $validator->validate($values_hashref);
     my $errors_hashref = $validator->errors;
+    my $pass_error = $validator->group('passwords')->error;
     my $validated_values_hashref = $validator->values;
 
 =head1 DESCRIPTION
@@ -322,6 +330,14 @@ are ignored.
 =head1 AUTHOR
 
 Viacheslav Tykhanovskyi, C<vti@cpan.org>.
+
+=head1 CREDITS
+
+In alphabetical order:
+
+Anatoliy Lapitskiy
+
+Yaroslav Korshak
 
 =head1 COPYRIGHT AND LICENSE
 

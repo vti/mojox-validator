@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More tests => 16;
 
 use MojoX::Validator;
 
@@ -12,7 +12,10 @@ my $validator = MojoX::Validator->new;
 $validator->field('password')->required(1);
 $validator->field('confirm_password')->required(1);
 
-$validator->group('passwords' => [qw/password confirm_password/])->equal;
+my $p = $validator->group('passwords' => [qw/password confirm_password/])->equal;
+
+isa_ok($p, 'MojoX::Validator::Group');
+is($p, $validator->group('passwords'), 'get group');
 
 ok(!$validator->validate({}));
 is_deeply($validator->errors,
