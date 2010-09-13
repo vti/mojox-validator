@@ -83,7 +83,7 @@ ok(!$field->is_empty);
 ok($field->is_valid);
 
 $field = MojoX::Validator::Field->new(name => 'foo');
-$field->multiple([2,3]);
+$field->multiple(2,3);
 $field->value([qw/foo/]);
 ok(!$field->is_valid);
 

@@ -10,7 +10,6 @@ use MojoX::Validator::ConstraintBuilder;
 
 __PACKAGE__->attr('name');
 __PACKAGE__->attr('required' => 0);
-__PACKAGE__->attr('multiple');
 __PACKAGE__->attr('error');
 __PACKAGE__->attr('trim' => 1);
 __PACKAGE__->attr(constraints => sub { [] });
@@ -36,6 +35,16 @@ sub constraint {
     push @{$self->constraints}, $constraint;
 
     return $self;
+}
+
+sub multiple {
+	my $self = shift;
+	
+	return $self->{multiple} unless @_;
+	
+	$self->{multiple} = [ splice @_, 0, 2 ];
+	
+	return $self;
 }
 
 sub value {
@@ -72,10 +81,11 @@ sub is_valid {
     
     my @values = $self->multiple ? @{$self->value} : $self->value;
     
-    if (ref $self->multiple eq 'ARRAY') {
-		my ($min, $max) = @{$self->multiple};
+    my $c = $self->multiple;
+    if ( $c ) {
+		my ($min, $max) = @$c;
 		$self->error('NOT_ENOUGH'), return 0 if @values < $min;
-		$self->error('OVERMUCH'), return 0 if @values > $max;
+		$self->error('OVERMUCH'), return 0 if defined $max and @values > $max;
 	}
     
     return 1 if $self->is_empty;
