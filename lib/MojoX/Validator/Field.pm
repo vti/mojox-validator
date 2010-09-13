@@ -9,17 +9,24 @@ use MojoX::Validator::Bulk;
 use MojoX::Validator::ConstraintBuilder;
 
 __PACKAGE__->attr('name');
-__PACKAGE__->attr(['required', 'multiple'] => 0);
+__PACKAGE__->attr('required' => 0);
+__PACKAGE__->attr('multiple');
 __PACKAGE__->attr('error');
 __PACKAGE__->attr('trim' => 1);
 __PACKAGE__->attr(constraints => sub { [] });
 
 # Shortcuts
 sub callback { shift->constraint('callback' => @_) }
+sub date     { shift->constraint('date'     => @_) }
 sub email    { shift->constraint('email'    => @_) }
+sub equal    { shift->constraint('equal'    => @_) }
 sub in       { shift->constraint('in'       => @_) }
+sub ip       { shift->constraint('ip'       => @_) }
 sub length   { shift->constraint('length'   => @_) }
 sub regexp   { shift->constraint('regexp'   => @_) }
+sub subset   { shift->constraint('subset'   => @_) }
+sub time     { shift->constraint('time  '   => @_) }
+sub unique   { shift->constraint('unique'   => @_) }
 
 sub constraint {
     my $self = shift;
@@ -48,9 +55,7 @@ sub value {
 
     return $self unless $self->trim;
 
-    foreach (
-        ref($self->{value}) eq 'ARRAY' ? @{$self->{value}} : ($self->{value}))
-    {
+    foreach ($self->multiple ? @{$self->{value}} : $self->{value}) {
         s/^\s+//;
         s/\s+$//;
     }
@@ -64,13 +69,18 @@ sub is_valid {
     $self->error('');
 
     $self->error('REQUIRED'), return 0 if $self->required && $self->is_empty;
-
+    
+    my @values = $self->multiple ? @{$self->value} : $self->value;
+    
+    if (ref $self->multiple eq 'ARRAY') {
+		my ($min, $max) = @{$self->multiple};
+		$self->error('NOT_ENOUGH'), return 0 if @values < $min;
+		$self->error('OVERMUCH'), return 0 if @values > $max;
+	}
+    
     return 1 if $self->is_empty;
 
     foreach my $c (@{$self->constraints}) {
-        my @values =
-          ref $self->value eq 'ARRAY' ? @{$self->value} : ($self->value);
-
         foreach my $value (@values) {
             my ($ok, $error) = $c->is_valid($value);
 

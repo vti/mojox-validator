@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 35;
+use Test::More tests => 39;
 
 use_ok('MojoX::Validator::Field');
 
@@ -81,3 +81,17 @@ $field->value(0);
 ok($field->is_defined);
 ok(!$field->is_empty);
 ok($field->is_valid);
+
+$field = MojoX::Validator::Field->new(name => 'foo');
+$field->multiple([2,3]);
+$field->value([qw/foo/]);
+ok(!$field->is_valid);
+
+$field->value([qw/foo bar/]);
+ok($field->is_valid);
+
+$field->value([qw/foo bar baz/]);
+ok($field->is_valid);
+
+$field->value([qw/foo bar baz urgh/]);
+ok(!$field->is_valid);
