@@ -335,6 +335,8 @@ Viacheslav Tykhanovskyi, C<vti@cpan.org>.
 
 In alphabetical order:
 
+Alex Voronov
+
 Anatoliy Lapitskiy
 
 Yaroslav Korshak
