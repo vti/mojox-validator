@@ -38,13 +38,13 @@ sub constraint {
 }
 
 sub multiple {
-	my $self = shift;
-	
-	return $self->{multiple} unless @_;
-	
-	$self->{multiple} = [ splice @_, 0, 2 ];
-	
-	return $self;
+    my $self = shift;
+
+    return $self->{multiple} unless @_;
+
+    $self->{multiple} = [splice @_, 0, 2];
+
+    return $self;
 }
 
 sub value {
@@ -78,16 +78,17 @@ sub is_valid {
     $self->error('');
 
     $self->error('REQUIRED'), return 0 if $self->required && $self->is_empty;
-    
+
     my @values = $self->multiple ? @{$self->value} : $self->value;
-    
-    my $c = $self->multiple;
-    if ( $c ) {
-		my ($min, $max) = @$c;
-		$self->error('NOT_ENOUGH'), return 0 if @values < $min;
-		$self->error('OVERMUCH'), return 0 if defined $max and @values > $max;
-	}
-    
+
+    if (my $multiple = $self->multiple) {
+        my ($min, $max) = @$multiple;
+
+        $self->error('NOT_ENOUGH'), return 0 if @values < $min;
+        $self->error('TOO_MUCH'), return 0
+          if defined $max ? @values > $max : $min != 1 && @values != $min;
+    }
+
     return 1 if $self->is_empty;
 
     foreach my $c (@{$self->constraints}) {
@@ -95,7 +96,7 @@ sub is_valid {
             my ($ok, $error) = $c->is_valid($value);
 
             unless ($ok) {
-                $self->error( $error ? $error : $c->error);
+                $self->error($error ? $error : $c->error);
                 return 0;
             }
         }
@@ -175,7 +176,17 @@ convenience.
     $field->multiple(1);
 
 Field can have multiple values. Use this when you want to allow array reference
-as value.
+as a value.
+
+    $field->multiple(2, 5);
+
+If you want to control how many multiple values there can be set C<min> and
+C<max> values.
+
+    $field->multiple(10);
+
+When C<max> value is omitted and is not C<1> (because it doesn't make sense),
+number of values must be equal to this value.
 
 =head2 C<name>
 
