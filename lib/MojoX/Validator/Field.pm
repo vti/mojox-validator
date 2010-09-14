@@ -24,7 +24,7 @@ sub ip       { shift->constraint('ip'       => @_) }
 sub length   { shift->constraint('length'   => @_) }
 sub regexp   { shift->constraint('regexp'   => @_) }
 sub subset   { shift->constraint('subset'   => @_) }
-sub time     { shift->constraint('time  '   => @_) }
+sub time     { shift->constraint('time'     => @_) }
 sub unique   { shift->constraint('unique'   => @_) }
 
 sub constraint {
