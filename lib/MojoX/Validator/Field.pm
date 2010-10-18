@@ -8,24 +8,13 @@ use base 'Mojo::Base';
 use MojoX::Validator::Bulk;
 use MojoX::Validator::ConstraintBuilder;
 
+our $AUTOLOAD;
+
 __PACKAGE__->attr('name');
 __PACKAGE__->attr('required' => 0);
 __PACKAGE__->attr('error');
 __PACKAGE__->attr('trim' => 1);
 __PACKAGE__->attr(constraints => sub { [] });
-
-# Shortcuts
-sub callback { shift->constraint('callback' => @_) }
-sub date     { shift->constraint('date'     => @_) }
-sub email    { shift->constraint('email'    => @_) }
-sub equal    { shift->constraint('equal'    => @_) }
-sub in       { shift->constraint('in'       => @_) }
-sub ip       { shift->constraint('ip'       => @_) }
-sub length   { shift->constraint('length'   => @_) }
-sub regexp   { shift->constraint('regexp'   => @_) }
-sub subset   { shift->constraint('subset'   => @_) }
-sub time     { shift->constraint('time'     => @_) }
-sub unique   { shift->constraint('unique'   => @_) }
 
 sub constraint {
     my $self = shift;
@@ -136,6 +125,20 @@ sub is_empty {
     return 1 unless $self->is_defined;
 
     return $self->value eq '' ? 1 : 0;
+}
+
+sub AUTOLOAD {
+    my $self = shift;
+
+    my $method = $AUTOLOAD;
+
+    return if $method =~ /^[A-Z]+?$/;
+    return if $method =~ /^_/;
+    return if $method =~ /(?:\:*?)DESTROY$/;
+
+    $method = (split '::' => $method)[-1];
+
+    return $self->constraint($method => @_)
 }
 
 1;
