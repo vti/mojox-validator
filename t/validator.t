@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 11;
+use Test::More tests => 13;
 
 use MojoX::Validator;
 
@@ -37,3 +37,8 @@ ok($validator->validate({foo => 0}));
 $validator = MojoX::Validator->new;
 $validator->field('firstname')->each(sub { shift->required(1) });
 ok($validator->validate({firstname => 'foo'}));
+
+$validator = MojoX::Validator->new(messages => {REQUIRED => 'Required!'});
+$validator->field('firstname')->required(1);
+ok(!$validator->validate());
+is($validator->errors->{firstname}, 'Required!');

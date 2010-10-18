@@ -10,11 +10,12 @@ use MojoX::Validator::ConstraintBuilder;
 
 our $AUTOLOAD;
 
-__PACKAGE__->attr('name');
-__PACKAGE__->attr('required' => 0);
 __PACKAGE__->attr('error');
-__PACKAGE__->attr('trim' => 1);
+__PACKAGE__->attr('name');
+__PACKAGE__->attr('required'  => 0);
 __PACKAGE__->attr(constraints => sub { [] });
+__PACKAGE__->attr(messages    => sub { {} });
+__PACKAGE__->attr(trim        => 1);
 
 sub constraint {
     my $self = shift;
@@ -24,6 +25,13 @@ sub constraint {
     push @{$self->constraints}, $constraint;
 
     return $self;
+}
+
+sub message {
+    my $self    = shift;
+    my $message = shift;
+
+    return $self->messages->{$message} || $message;
 }
 
 sub multiple {
@@ -66,15 +74,17 @@ sub is_valid {
 
     $self->error('');
 
-    $self->error('REQUIRED'), return 0 if $self->required && $self->is_empty;
+    $self->error($self->message('REQUIRED')), return 0
+      if $self->required && $self->is_empty;
 
     my @values = $self->multiple ? @{$self->value} : $self->value;
 
     if (my $multiple = $self->multiple) {
         my ($min, $max) = @$multiple;
 
-        $self->error('NOT_ENOUGH'), return 0 if @values < $min;
-        $self->error('TOO_MUCH'), return 0
+        $self->error($self->message('NOT_ENOUGH')), return 0
+          if @values < $min;
+        $self->error($self->message('TOO_MUCH')), return 0
           if defined $max ? @values > $max : $min != 1 && @values != $min;
     }
 
@@ -85,7 +95,7 @@ sub is_valid {
             my ($ok, $error) = $c->is_valid($value);
 
             unless ($ok) {
-                $self->error($error ? $error : $c->error);
+                $self->error($error ? $error : $self->message($c->error));
                 return 0;
             }
         }
@@ -138,7 +148,7 @@ sub AUTOLOAD {
 
     $method = (split '::' => $method)[-1];
 
-    return $self->constraint($method => @_)
+    return $self->constraint($method => @_);
 }
 
 1;

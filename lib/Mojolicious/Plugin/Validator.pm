@@ -8,9 +8,13 @@ use base 'Mojolicious::Plugin';
 use MojoX::Validator;
 
 sub register {
-    my ($self, $app) = @_;
+    my ($self, $app, $conf) = @_;
 
-    $app->helper(create_validator => sub { MojoX::Validator->new });
+    $conf ||= {};
+    $conf->{messages} ||= {};
+
+    $app->helper(create_validator =>
+          sub { MojoX::Validator->new(messages => $conf->{messages}) });
 
     $app->helper(
         validate => sub {

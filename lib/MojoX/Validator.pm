@@ -14,12 +14,13 @@ use MojoX::Validator::Group;
 
 require Carp;
 
-__PACKAGE__->attr('fields'     => sub { {} });
 __PACKAGE__->attr('bulk');
-__PACKAGE__->attr('groups'     => sub { [] });
-__PACKAGE__->attr('conditions' => sub { [] });
-__PACKAGE__->attr(has_errors   => 0);
-__PACKAGE__->attr(trim         => 1);
+__PACKAGE__->attr(conditions => sub { [] });
+__PACKAGE__->attr(fields     => sub { {} });
+__PACKAGE__->attr(groups     => sub { [] });
+__PACKAGE__->attr(has_errors => 0);
+__PACKAGE__->attr(messages   => sub { {} });
+__PACKAGE__->attr(trim       => 1);
 
 sub field {
     my $self = shift;
@@ -33,7 +34,10 @@ sub field {
 
     my $fields = [];
     foreach my $name (@names) {
-        my $field = MojoX::Validator::Field->new(name => $name);
+        my $field = MojoX::Validator::Field->new(
+            name     => $name,
+            messages => $self->messages
+        );
 
         $self->fields->{$name} = $field;
         push @$fields, $field;
@@ -59,7 +63,7 @@ sub group {
     my $name   = shift;
     my $fields = shift;
 
-    if (my($exists) = grep { $_->name eq $name } @{$self->groups} ) {
+    if (my ($exists) = grep { $_->name eq $name } @{$self->groups}) {
         Carp::croak "Fields of group '$name' already defined." if $fields;
         return $exists;
     }
@@ -119,7 +123,9 @@ sub validate {
         $self->_validate_fields;
         $self->_validate_groups;
 
-        my @conditions = grep {!$_->matched && $_->match($self->fields)} @{$self->conditions};
+        my @conditions =
+          grep { !$_->matched && $_->match($self->fields) }
+          @{$self->conditions};
         last unless @conditions;
 
         foreach my $cond (@conditions) {
@@ -131,7 +137,7 @@ sub validate {
 }
 
 sub _populate_fields {
-    my $self = shift;
+    my $self   = shift;
     my $params = shift;
 
     foreach my $field (values %{$self->fields}) {
@@ -142,7 +148,7 @@ sub _populate_fields {
 }
 
 sub _validate_fields {
-    my $self = shift;
+    my $self   = shift;
     my $params = shift;
 
     foreach my $field (values %{$self->fields}) {
