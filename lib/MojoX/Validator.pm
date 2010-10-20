@@ -248,6 +248,14 @@ generation, B<NO> other stuff that does something else. Only data validation!
 
 =head1 ATTRIBUTES
 
+=head2 C<messages>
+
+    my $validator =
+      MojoX::Validator->new(
+        messages => {REQUIRED => 'This field is required'});
+
+Replace default messages.
+
 =head2 C<trim>
 
 Trim field values. B<ON> by default.
