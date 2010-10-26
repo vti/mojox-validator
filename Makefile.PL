@@ -36,6 +36,6 @@ WriteMakefile(
         )
     ),
 
-    PREREQ_PM => {'Mojolicious' => '0.999930'},
+    PREREQ_PM => {'Mojolicious' => '0.999931'},
     test      => {TESTS         => 't/*.t t/*/*.t t/*/*/*.t t/*/*/*/*.t'}
 );

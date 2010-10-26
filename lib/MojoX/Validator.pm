@@ -5,7 +5,7 @@ use warnings;
 
 use base 'Mojo::Base';
 
-our $VERSION = '0.0006';
+our $VERSION = '0.0007';
 
 use MojoX::Validator::Bulk;
 use MojoX::Validator::Condition;
