@@ -18,7 +18,6 @@ __PACKAGE__->attr('bulk');
 __PACKAGE__->attr(conditions => sub { [] });
 __PACKAGE__->attr(fields     => sub { {} });
 __PACKAGE__->attr(groups     => sub { [] });
-__PACKAGE__->attr(has_errors => 0);
 __PACKAGE__->attr(messages   => sub { {} });
 __PACKAGE__->attr(trim       => 1);
 
@@ -77,26 +76,35 @@ sub group {
     return $group;
 }
 
+sub has_errors {
+    my $self = shift;
+
+    my $errors = $self->{errors};
+
+    return 1 if $errors && scalar keys %$errors;
+
+    return 0;
+}
+
+sub error {
+    my $self = shift;
+    my ($name, $message) = @_;
+
+    $self->{errors} ||= {};
+
+    $self->{errors}->{$name} = $message;
+
+    return $self;
+}
+
 sub errors {
-    my ($self) = @_;
+    my $self = shift;
 
-    my $errors = {};
-
-    # Field errors
-    foreach my $field (values %{$self->fields}) {
-        $errors->{$field->name} = $field->error if $field->error;
-    }
-
-    # Group errors
-    foreach my $group (@{$self->groups}) {
-        $errors->{$group->name} = $group->error if $group->error;
-    }
-
-    return $errors;
+    return $self->{errors};
 }
 
 sub clear_errors {
-    my ($self) = @_;
+    my $self = shift;
 
     # Clear field errors
     foreach my $field (values %{$self->fields}) {
@@ -108,11 +116,11 @@ sub clear_errors {
         $group->error('');
     }
 
-    $self->has_errors(0);
+    $self->{errors} = {};
 }
 
 sub validate {
-    my ($self) = shift;
+    my $self   = shift;
     my $params = shift;
 
     $self->clear_errors;
@@ -152,7 +160,9 @@ sub _validate_fields {
     my $params = shift;
 
     foreach my $field (values %{$self->fields}) {
-        $self->has_errors(1) unless $field->is_valid;
+        next if $field->is_valid;
+
+        $self->error($field->name => $field->error) if $field->error;
     }
 }
 
@@ -160,7 +170,9 @@ sub _validate_groups {
     my $self = shift;
 
     foreach my $group (@{$self->groups}) {
-        $self->has_errors(1) unless $group->is_valid;
+        next if $group->is_valid;
+
+        $self->error($group->name => $group->error) if $group->error;
     }
 }
 
@@ -321,11 +333,23 @@ which means that a field has multiple values. In case of an array reference, it
 is checked if a field can have multiple values. Otherwise only the first value
 is accepted and returned when C<values> method is called.
 
+=head2 C<error>
+
+    $validator->error(foo => 'bar');
+
+Set a custom error.
+
 =head2 C<errors>
 
     $validator->errors; # {a => 'Required'}
 
 Returns a hash reference of errors.
+
+=head2 C<has_errors>
+
+    $validator->has_errors;
+
+Check if there are any errors.
 
 =head2 C<values>
 

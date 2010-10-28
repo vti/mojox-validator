@@ -18,7 +18,7 @@ ok($validator->validate({firstname => 'bar', website => 'http://fooo.com'}));
 is_deeply($validator->values,
     {firstname => 'bar', website => 'http://fooo.com'});
 
-# Ok, but only known fields are returned
+# Ok and only known fields are returned
 ok($validator->validate({firstname => 'bar', foo => 1}));
 is_deeply($validator->values, {firstname => 'bar'});
 

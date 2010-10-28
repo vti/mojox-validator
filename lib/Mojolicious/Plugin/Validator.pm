@@ -62,6 +62,18 @@ sub register {
     );
 
     $app->helper(
+        validator_has_errors => sub {
+            my $self = shift;
+
+            my $errors = $self->stash('validator_errors');
+
+            return 0 if !$errors || !keys %$errors;
+
+            return 1;
+        }
+    );
+
+    $app->helper(
         validator_error => sub {
             my $self = shift;
             my $name = shift;
@@ -111,6 +123,9 @@ Mojolicious::Plugin::Validator - Plugin for MojoX::Validator
     __DATA__
 
     @@ user.html.ep
+    %= if (validator_has_errors) {
+        <div class="error">Please, correct the errors below.</div>
+    % }
     %= form_for 'user' => begin
         <label for="username">Username</label><br />
         <%= input_tag 'username' %><br />
@@ -146,6 +161,8 @@ Replace default errors.
 
 =over
 
+=item create_validator
+
     my $validator = $self->create_validator;
     $validator->field('username')->required(1)->length(3, 20);
 
@@ -161,13 +178,29 @@ preconfigured validators can be used.
 
 =over
 
-    $self->validator($validator);
+=item validate
+
+    $self->validate($validator);
 
 Validate parameters with provided validator and automatically set errors.
 
 =back
 
 =over
+
+=item validator_has_errors
+
+    %= if (validator_has_errors) {
+        <div class="error">Please, correct the errors below.</div>
+    % }
+
+Check if there are any errors.
+
+=back
+
+=over
+
+=item validator_error
 
     <%= validator_error 'username' %>
 
