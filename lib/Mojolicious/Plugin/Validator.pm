@@ -113,7 +113,7 @@ Mojolicious::Plugin::Validator - Plugin for MojoX::Validator
         my $validator = $self->create_validator;
         $validator->field('username')->required(1)->length(3, 20);
 
-        return unless $validator->validate;
+        return unless $self->validate($validate);
 
         # Create a user for example
         ...
