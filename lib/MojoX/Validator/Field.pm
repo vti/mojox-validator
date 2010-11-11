@@ -39,19 +39,24 @@ sub message {
 }
 
 sub _message {
-    my $self    = shift;
-    my $message = shift;
-    my $params  = shift || [];
+    my $self   = shift;
+    my $key    = shift;
+    my $msg    = shift;
+    my $params = shift || [];
 
+    # Custom error for field
     if ($self->{message}) {
-        return sprintf($self->{message}, @$params) if $self->{message};
+        return sprintf($self->{message}, @$params);
     }
 
-    return sprintf($self->messages->{$message}, @$params)
-        if $self->messages->{$message};
+    # Custom error for constraint
+    return sprintf($self->messages->{$key}, @$params)
+        if $self->messages->{$key};
 
-    return $message;
+    # Default error message for constraint
+    return sprintf($msg || $key, @$params);
 }
+
 
 sub multiple {
     my $self = shift;
@@ -112,10 +117,11 @@ sub is_valid {
 
     foreach my $c (@{$self->constraints}) {
         foreach my $value (@values) {
-            my ($ok, $error) = $c->is_valid($value);
+            my ($ok, $params) = $c->is_valid($value);
 
             unless ($ok) {
-                $self->error($self->_message($c->error, $error));
+
+                $self->error($self->_message($c->error, $c->message, $params));
                 return 0;
             }
         }

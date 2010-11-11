@@ -23,6 +23,8 @@ sub error {
       . '_CONSTRAINT_FAILED';
 }
 
+sub message {undef}
+
 1;
 __END__
 

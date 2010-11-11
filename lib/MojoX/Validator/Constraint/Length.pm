@@ -18,6 +18,8 @@ sub is_valid {
     return $len >= $min && $len <= $max ? 1 : (0, [$min, $max, $len]);
 }
 
+sub message {'Field can have between %s and %s characters, you have entered %s characters.'}
+
 1;
 __END__
 

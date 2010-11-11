@@ -100,7 +100,7 @@ for my $path ('', 'custom', 'decamelized') {
     $t->post_form_ok("/$path" => {})->status_is(200)
       ->content_like(qr/required/i);
     $t->post_form_ok("/$path" => {foo => '12345678901'})->status_is(200)
-      ->content_like(qr/length/i);
+      ->content_like(qr/Field can have between/i);
     $t->post_form_ok("/$path" => {foo => '123'})->status_is(200)
       ->content_like(qr/ok/i);
 }
