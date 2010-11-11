@@ -268,6 +268,16 @@ generation, B<NO> other stuff that does something else. Only data validation!
 
 Replace default messages.
 
+    my $validator =
+      MojoX::Validator->new(
+        messages => {
+          LENGTH_CONSTRAINT_FAILED => 'Field can have between %s and %s
+            characters, you entered %s characters.'
+        }
+    );
+
+Replace default messages with placeholders.
+
 =head2 C<trim>
 
 Trim field values. B<ON> by default.

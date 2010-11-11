@@ -41,6 +41,20 @@ C<n, m> values.
 
 Validates the constraint.
 
+=head1 CUSTOM ERROR MESSAGES
+
+Provides values for use in custom error messages in the following order:
+
+min value, max value, actual length
+
+    my $validator =
+      MojoX::Validator->new(
+        messages => {
+          LENGTH_CONSTRAINT_FAILED => 'Field can have between %s and %s
+            characters, you entered %s characters.'
+        }
+    );
+
 =head1 SEE ALSO
 
 L<MojoX::Validator>, L<MojoX::Constraint>

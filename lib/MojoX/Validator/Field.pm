@@ -208,6 +208,12 @@ Field error.
 Each method as described in L<MojoX::Validator::Bulk>. Added here for
 convenience.
 
+=head2 C<message>
+
+    $field->message('Show this custom error message');
+
+Set custom error message for a specific field.
+
 =head2 C<multiple>
 
     $field->multiple(1);
@@ -287,10 +293,6 @@ Checks whether field's value is empty.
 =head2 C<is_valid>
 
 Checks whether all field's constraints are valid.
-
-=head2 C<message>
-
-Holds error message.
 
 =head2 C<value>
 
