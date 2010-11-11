@@ -57,7 +57,6 @@ sub _message {
     return sprintf($msg || $key, @$params);
 }
 
-
 sub multiple {
     my $self = shift;
 

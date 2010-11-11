@@ -20,12 +20,12 @@ $constraint = MojoX::Validator::Constraint::Length->new(args => 1);
 
 ok($constraint);
 
-is($constraint->is_valid('Hello'), 0);
+is_deeply([$constraint->is_valid('Hello')], [0,[1,undef,5]]);
 is($constraint->is_valid('a'), 1);
 
 $constraint = MojoX::Validator::Constraint::Length->new(args => [1]);
 
 ok($constraint);
 
-is($constraint->is_valid('Hello'), 0);
+is_deeply([$constraint->is_valid('Hello')], [0,[1,undef,5]]);
 is($constraint->is_valid('a'), 1);

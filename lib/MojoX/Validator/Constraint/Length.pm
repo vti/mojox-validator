@@ -13,12 +13,24 @@ sub is_valid {
     my $args = $self->args;
     my ($min, $max) = ref $args eq 'ARRAY' ? @{$args} : ($args);
 
-    return $len eq $min ? 1 : 0 unless $max;
+    return $len eq $min ? 1 : (0, [$min, $max, $len]) unless $max;
 
     return $len >= $min && $len <= $max ? 1 : (0, [$min, $max, $len]);
 }
 
-sub message {'Field can have between %s and %s characters, you have entered %s characters.'}
+sub message {
+    my $self = shift;
+
+    my $args = $self->args;
+    my ($min, $max) = ref $args eq 'ARRAY' ? @{$args} : ($args);
+
+    if ($max) {
+        'Field can have between %s and %s characters, you have entered %s characters.'
+    }
+    else {
+        'Field must have length of %1$s characters, you have entered %3$s characters.'
+    }
+}
 
 1;
 __END__
