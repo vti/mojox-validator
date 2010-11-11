@@ -15,7 +15,7 @@ sub is_valid {
 
     return $len eq $min ? 1 : 0 unless $max;
 
-    return $len >= $min && $len <= $max ? 1 : 0;
+    return $len >= $min && $len <= $max ? 1 : (0, [$min, $max, $len]);
 }
 
 1;

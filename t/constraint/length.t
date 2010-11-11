@@ -13,8 +13,8 @@ my $constraint =
 ok($constraint);
 
 is($constraint->is_valid('Hello'), 1);
-is($constraint->is_valid('He'), 0);
-is($constraint->is_valid('Hello!'), 0);
+is_deeply([$constraint->is_valid('He')], [0,[3,5,2]] );
+is_deeply([$constraint->is_valid('Hello!')], [0,[3,5,6]] );
 
 $constraint = MojoX::Validator::Constraint::Length->new(args => 1);
 

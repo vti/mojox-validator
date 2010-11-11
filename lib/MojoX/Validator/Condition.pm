@@ -57,7 +57,8 @@ sub match {
                 return 0 unless defined($value) && $value ne '';
 
                 foreach my $c (@{$bulk->{constraints}}) {
-                    return 0 unless $c->is_valid($value);
+                    my ($ok, $error) = $c->is_valid($value);
+                    return 0 unless $ok;
                 }
             }
         }

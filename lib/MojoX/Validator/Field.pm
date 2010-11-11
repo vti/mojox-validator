@@ -27,9 +27,25 @@ sub constraint {
     return $self;
 }
 
+
 sub message {
     my $self    = shift;
     my $message = shift;
+
+    $self->{message} = $message if defined $message;
+
+    return $self;
+
+}
+
+sub _message {
+    my $self    = shift;
+    my $message = shift;
+    my $params  = shift || [];
+
+    if ($self->{message}) {
+        return sprintf($self->{message}, @$params) if $self->{message};
+    }
 
     return $self->messages->{$message} || $message;
 }
@@ -50,6 +66,7 @@ sub value {
     return $self->{value} unless @_;
 
     my $value = shift;
+
     return unless defined $value;
 
     if ($self->multiple) {
@@ -74,7 +91,7 @@ sub is_valid {
 
     $self->error('');
 
-    $self->error($self->message('REQUIRED')), return 0
+    $self->error($self->_message('REQUIRED')), return 0
       if $self->required && $self->is_empty;
 
     my @values = $self->multiple ? @{$self->value} : $self->value;
@@ -82,9 +99,9 @@ sub is_valid {
     if (my $multiple = $self->multiple) {
         my ($min, $max) = @$multiple;
 
-        $self->error($self->message('NOT_ENOUGH')), return 0
+        $self->error($self->_message('NOT_ENOUGH')), return 0
           if @values < $min;
-        $self->error($self->message('TOO_MUCH')), return 0
+        $self->error($self->_message('TOO_MUCH')), return 0
           if defined $max ? @values > $max : $min != 1 && @values != $min;
     }
 
@@ -95,7 +112,7 @@ sub is_valid {
             my ($ok, $error) = $c->is_valid($value);
 
             unless ($ok) {
-                $self->error($error ? $error : $self->message($c->error));
+                $self->error($self->_message($c->error, $error));
                 return 0;
             }
         }
