@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 48;
+use Test::More tests => 50;
 
 use_ok('MojoX::Validator::Field');
 
@@ -120,3 +120,12 @@ $field->value('Hi');
 ok(!$field->is_valid);
 is($field->error, 'Name can have between 3 and 20 characters, you entered 2!');
 
+$field = MojoX::Validator::Field->new(name => 'foo',
+    messages => {
+        LENGTH_CONSTRAINT_FAILED => 'Name can have between %s and %s characters, you entered %s!'
+    }
+);
+$field->length([3, 20]);
+$field->value('Hi');
+ok(!$field->is_valid);
+is($field->error, 'Name can have between 3 and 20 characters, you entered 2!');

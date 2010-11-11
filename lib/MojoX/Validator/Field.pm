@@ -47,7 +47,10 @@ sub _message {
         return sprintf($self->{message}, @$params) if $self->{message};
     }
 
-    return $self->messages->{$message} || $message;
+    return sprintf($self->messages->{$message}, @$params)
+        if $self->messages->{$message};
+
+    return $message;
 }
 
 sub multiple {
