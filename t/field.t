@@ -3,10 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 53;
+use Test::More tests => 48;
 
 use_ok('MojoX::Validator::Field');
-use_ok('MojoX::Validator');
 
 my $field = MojoX::Validator::Field->new(name => 'foo');
 $field->required(1);
@@ -121,21 +120,3 @@ $field->value('Hi');
 ok(!$field->is_valid);
 is($field->error, 'Name can have between 3 and 20 characters, you entered 2!');
 
-# Custom errors bulk
-my $validator = MojoX::Validator->new;
-$validator->field([qw/foo bar/])->each(
-    sub {
-        shift->length(3, 20)
-          ->message('Name can have between %s and %s characters, you entered %s!')
-    }
-);
-
-$field = $validator->field('foo');
-$field->value('Hi');
-ok(!$field->is_valid);
-is($field->error, 'Name can have between 3 and 20 characters, you entered 2!');
-
-$field = $validator->field('bar');
-$field->value('Hi');
-ok(!$field->is_valid);
-is($field->error, 'Name can have between 3 and 20 characters, you entered 2!');
