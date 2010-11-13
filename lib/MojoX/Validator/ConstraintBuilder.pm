@@ -12,7 +12,10 @@ sub build {
     my $self = shift;
     my $name = shift;
 
-    my $class = "MojoX::Validator::Constraint::"
+    my $class =
+        $name =~ m/[A-Z]/
+      ? $name
+      : "MojoX::Validator::Constraint::"
       . Mojo::ByteStream->new($name)->camelize;
 
     # Load class
