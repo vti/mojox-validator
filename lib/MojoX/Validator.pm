@@ -107,7 +107,7 @@ sub clear_errors {
     my $self = shift;
 
     # Clear field errors
-    foreach my $field (values %{$self->fields}) {
+    foreach my $field (CORE::values %{$self->fields}) {
         $field->error('');
     }
 
@@ -148,7 +148,7 @@ sub _populate_fields {
     my $self   = shift;
     my $params = shift;
 
-    foreach my $field (values %{$self->fields}) {
+    foreach my $field (CORE::values %{$self->fields}) {
         $field->clear_value;
 
         $field->value($params->{$field->name});
@@ -159,7 +159,7 @@ sub _validate_fields {
     my $self   = shift;
     my $params = shift;
 
-    foreach my $field (values %{$self->fields}) {
+    foreach my $field (CORE::values %{$self->fields}) {
         next if $field->is_valid;
 
         $self->error($field->name => $field->error) if $field->error;
@@ -181,7 +181,7 @@ sub values {
 
     my $values = {};
 
-    foreach my $field (values %{$self->fields}) {
+    foreach my $field (CORE::values %{$self->fields}) {
         $values->{$field->name} = $field->value
           if defined $field->value && !$field->error;
     }
