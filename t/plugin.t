@@ -50,7 +50,7 @@ post '/' => sub {
     $validator->field('foo')->required(1)->length(3, 10);
 
     if ($self->validate($validator)) {
-        $self->render('ok');
+        return $self->render('ok');
     }
 } => 'form';
 
@@ -60,7 +60,7 @@ post '/custom' => sub {
     my $validator = $self->create_validator('Custom');
 
     if ($self->validate($validator)) {
-        $self->render('ok');
+        return $self->render('ok');
     }
 
     $self->render('form');
@@ -72,7 +72,7 @@ post '/decamelized' => sub {
     my $validator = $self->create_validator('decamelized');
 
     if ($self->validate($validator)) {
-        $self->render('ok');
+        return $self->render('ok');
     }
 
     $self->render('form');
