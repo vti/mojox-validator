@@ -10,7 +10,9 @@ require Time::Local;
 sub is_valid {
     my ($self, $value) = @_;
 
-    my $re = $self->args->{split} || '/';
+    my %args = @{$self->args};
+
+    my $re = $args{split} || '/';
     my ($year, $month, $day) = split($re, $value);
 
     return 0 unless $year && $month && $day;
