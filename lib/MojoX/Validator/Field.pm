@@ -29,7 +29,6 @@ sub constraint {
     return $self;
 }
 
-
 sub message {
     my $self    = shift;
     my $message = shift;
@@ -121,7 +120,7 @@ sub is_valid {
             }
         }
     }
-    
+
     map { &{$self->deflate} } @values if $self->deflate;
 
     $self->value($self->multiple ? \@values : $values[0]);
