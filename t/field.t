@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 48;
+use Test::More tests => 58;
 
 use_ok('MojoX::Validator::Field');
 
@@ -119,4 +119,39 @@ $field->message('Name can have between %s and %s characters, you entered %s!');
 $field->value('Hi');
 ok(!$field->is_valid);
 is($field->error, 'Name can have between 3 and 20 characters, you entered 2!');
+
+# inflate
+$field = MojoX::Validator::Field->new(name => 'foo');
+$field->inflate(sub { $_ = 'inflate' });
+$field->value('raw');
+ok($field->is_valid);
+is($field->value, 'inflate');
+
+$field->inflate(sub { s/bar/baz/ });
+$field->multiple(1);
+$field->value([qw/foo bar/]);
+ok($field->is_valid);
+is_deeply($field->value, [qw/foo baz/]);
+
+# deflate
+$field = MojoX::Validator::Field->new(name => 'foo');
+$field->deflate(sub { $_ = 'deflate' });
+$field->value('raw');
+ok($field->is_valid);
+is($field->value, 'deflate');
+
+$field->deflate(sub { s/bar/baz/ });
+$field->multiple(1);
+$field->value([qw/foo bar/]);
+ok($field->is_valid);
+is_deeply($field->value, [qw/foo baz/]);
+
+# inflate/deflate
+$field = MojoX::Validator::Field->new(name => 'foo');
+$field->inflate(sub { s/bar/baz/ });
+$field->deflate(sub { s/baz/foo/ });
+$field->value('bar');
+ok($field->is_valid);
+is($field->value, 'foo');
+
 
