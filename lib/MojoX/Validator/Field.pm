@@ -97,7 +97,7 @@ sub is_valid {
 
     my @values = $self->multiple ? @{$self->value} : $self->value;
 
-    map { &{$self->inflate} } @values if $self->inflate;
+    @values = map { &{$self->inflate} } @values if $self->inflate;
 
     if (my $multiple = $self->multiple) {
         my ($min, $max) = @$multiple;
@@ -120,8 +120,8 @@ sub is_valid {
             }
         }
     }
-
-    map { &{$self->deflate} } @values if $self->deflate;
+    
+    @values = map { &{$self->deflate} } @values if $self->deflate;
 
     $self->value($self->multiple ? \@values : $values[0]);
 
