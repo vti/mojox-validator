@@ -27,6 +27,11 @@ sub new {
     die 'broken!';
 }
 
+package UnknownParams;
+use base 'MojoX::Validator';
+
+sub new { shift->SUPER::new(@_, explicit => 1) }
+
 package main;
 
 use strict;
@@ -36,7 +41,7 @@ use Test::More;
 
 plan skip_all => 'working sockets required for this test!'
   unless Mojo::IOLoop->new->generate_port;
-plan tests => 31;
+plan tests => 34;
 
 use Mojolicious::Lite;
 
@@ -90,6 +95,15 @@ post '/wrong-isa' => sub {
     $self->create_validator('WrongIsa');
 } => 'wrong-isa';
 
+post '/has-unknown-params' => sub {
+    my $self = shift;
+
+    my $validator = $self->create_validator('UnknownParams');
+
+    $self->render(template => 'unknown', status => 501) if !$self->validate($validator);
+
+} => 'has-unknown-params';
+
 use Test::Mojo;
 
 my $t = Test::Mojo->new;
@@ -108,6 +122,10 @@ for my $path ('', 'custom', 'decamelized') {
 $t->post_form_ok('/wrong-isa' => {})->status_is(500);
 $t->post_form_ok('/broken'    => {})->status_is(500);
 
+$t->post_form_ok('/has-unknown-params' => { not => 'specified' })
+  ->status_is(501)
+  ->content_is("1\n");
+
 __DATA__
 
 @@ form.html.ep
@@ -118,3 +136,6 @@ __DATA__
 
 @@ ok.html.ep
 OK
+
+@@ unknown.html.ep
+<%= validator_has_unknown_params %>

@@ -14,7 +14,7 @@ use MojoX::Validator::Group;
 
 require Carp;
 
-__PACKAGE__->attr('bulk');
+__PACKAGE__->attr([qw/ bulk explicit has_unknown_params /]);
 __PACKAGE__->attr(conditions => sub { [] });
 __PACKAGE__->attr(fields     => sub { {} });
 __PACKAGE__->attr(groups     => sub { [] });
@@ -125,6 +125,8 @@ sub validate {
 
     $self->clear_errors;
 
+    $self->_flag_unknown($params);
+
     $self->_populate_fields($params);
 
     while (1) {
@@ -142,6 +144,20 @@ sub validate {
     }
 
     return $self->has_errors ? 0 : 1;
+}
+
+sub _flag_unknown {
+    my $self   = shift;
+    my $params = shift;
+
+    foreach my $param (keys %$params) {
+        if (!defined $self->fields->{$param}) {
+            $self->has_unknown_params(1);
+
+            $self->field($param) and $self->error($param => 'NOT_SPECIFIED')
+                if $self->explicit;
+        }
+    }
 }
 
 sub _populate_fields {
@@ -252,6 +268,9 @@ generation, B<NO> other stuff that does something else. Only data validation!
     If a value is not required and during validation is empty there is B<NO>
     error
 
+    If explicit is set to true, then all values not explicitly required
+    generate an error
+
     If a value is passed as an array reference and an appropriate field is
     not multiple, than only the first value is taken, otherwise every value of
     the array reference is checked.
@@ -259,6 +278,14 @@ generation, B<NO> other stuff that does something else. Only data validation!
 =back
 
 =head1 ATTRIBUTES
+
+=head2 C<explicit>
+
+Causes errors to be generated when unknown parameters exist.
+
+=head2 C<has_unknown_params>
+
+Unknown parameters exist in validated parameter hashref.
 
 =head2 C<messages>
 
@@ -376,6 +403,8 @@ In alphabetical order:
 Alex Voronov
 
 Anatoliy Lapitskiy
+
+Glen Hinkle
 
 Naoya Ito
 
