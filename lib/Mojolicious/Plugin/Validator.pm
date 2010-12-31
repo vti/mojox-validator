@@ -56,15 +56,15 @@ sub register {
             return 1 if $validator->validate($params);
 
             $self->stash(validator_errors => $validator->errors);
-            $self->stash(validator_has_unknown_params => $validator->has_unknown_params);
+            $self->stash(validator_has_unknown_params =>
+                  $validator->has_unknown_params);
 
             return;
         }
     );
 
-    $app->helper(
-        validator_has_unknown_params => sub { shift->stash('validator_has_unknown_params') }
-    );
+    $app->helper(validator_has_unknown_params =>
+          sub { shift->stash('validator_has_unknown_params') });
 
     $app->helper(
         validator_has_errors => sub {
@@ -217,14 +217,13 @@ Render the appropriate error.
 
 =item validator_has_unknown_params
 
-    %= if(validator_has_unknown_params) {
+    %= if (validator_has_unknown_params) {
         <div class="error">Unspecified parameters were detected.</div>
     % }
 
 Returns true if unspecified parameters were passed
 
 =back
-
 
 =head1 METHODS
 
