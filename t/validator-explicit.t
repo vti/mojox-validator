@@ -14,9 +14,12 @@ ok!($validator->errors->{firstname});
 ok!($validator->has_errors);
 ok($validator->has_unknown_params);
 
-# Unknown params and errors with explicit => 1
-ok($validator = MojoX::Validator->new(explicit => 1));
-ok(!$validator->validate({firstname => 'bar'}));
-is($validator->errors->{firstname}, 'NOT_SPECIFIED');
-is($validator->values->{firstname} => 'bar');
+# Unknown params and custom errors with explicit => 1
+ok($validator = MojoX::Validator->new(
+        explicit => 1,
+        messages => { NOT_SPECIFIED => 'custom error' }));
+
+ok!($validator->validate({firstname => 'bar'}));
+is($validator->errors->{firstname}, 'custom error');
+ok!($validator->values->{firstname});
 ok($validator->has_unknown_params);

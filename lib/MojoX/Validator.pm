@@ -35,7 +35,8 @@ sub field {
     foreach my $name (@names) {
         my $field = MojoX::Validator::Field->new(
             name     => $name,
-            messages => $self->messages
+            messages => $self->messages,
+            explicit => $self->explicit,
         );
 
         $self->fields->{$name} = $field;
@@ -154,8 +155,8 @@ sub _flag_unknown {
         if (!defined $self->fields->{$param}) {
             $self->has_unknown_params(1);
 
-            $self->field($param) and $self->error($param => 'NOT_SPECIFIED')
-                if $self->explicit;
+           $self->field($param)->unknown(1)->error($param => 'NOT_SPECIFIED')
+             if $self->explicit;
         }
     }
 }
