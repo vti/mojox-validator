@@ -15,6 +15,8 @@ __PACKAGE__->attr('name');
 __PACKAGE__->attr('inflate');
 __PACKAGE__->attr('deflate');
 __PACKAGE__->attr('required'  => 0);
+__PACKAGE__->attr('unknown'   => 0);
+__PACKAGE__->attr('explicit'  => 0);
 __PACKAGE__->attr(constraints => sub { [] });
 __PACKAGE__->attr(messages    => sub { {} });
 __PACKAGE__->attr(trim        => 1);
@@ -91,6 +93,9 @@ sub is_valid {
     my ($self) = @_;
 
     $self->error('');
+
+    $self->error($self->_message('NOT_SPECIFIED')), return 0
+      if $self->explicit && $self->unknown;
 
     $self->error($self->_message('REQUIRED')), return 0
       if $self->required && $self->is_empty;
