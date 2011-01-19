@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 64;
+use Test::More tests => 68;
 
 use_ok('MojoX::Validator::Field');
 
@@ -111,14 +111,41 @@ $field->value([qw/foo bar baz/]);
 ok(!$field->is_valid);
 is($field->error, 'TOO_MUCH');
 
+# Multiple constraints
+$field = MojoX::Validator::Field->new(name => 'foo');
+$field->multiple(1, 10);
+$field->unique;
+$field->value([qw/1 2 3 4 5/]);
+ok($field->is_valid);
+
+$field = MojoX::Validator::Field->new(name => 'foo');
+$field->multiple(1, 10);
+$field->unique;
+$field->value([qw/1 2 3 4 4/]);
+ok(!$field->is_valid);
+
+$field = MojoX::Validator::Field->new(name => 'foo');
+$field->multiple(1, 10);
+$field->equal;
+$field->value([qw/1 1 1 1 1/]);
+ok($field->is_valid);
+
+$field = MojoX::Validator::Field->new(name => 'foo');
+$field->multiple(1, 10);
+$field->equal;
+$field->value([qw/1 1 2 1 1/]);
+ok(!$field->is_valid);
+
 # Custom error messages
 $field = MojoX::Validator::Field->new(name => 'foo');
 $field->length([3, 20]);
-$field->message('Name can have between %s and %s characters, you entered %s!');
+$field->message(
+    'Name can have between %s and %s characters, you entered %s!');
 
 $field->value('Hi');
 ok(!$field->is_valid);
-is($field->error, 'Name can have between 3 and 20 characters, you entered 2!');
+is($field->error,
+    'Name can have between 3 and 20 characters, you entered 2!');
 
 # inflate
 $field = MojoX::Validator::Field->new(name => 'foo');
