@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 19;
+use Test::More tests => 24;
 
 use MojoX::Validator::Condition;
 use MojoX::Validator::Field;
@@ -24,6 +24,9 @@ ok($condition->match({bar => $bar}));
 $condition = MojoX::Validator::Condition->new;
 $condition->when([qw/foo bar/]);
 
+$foo = MojoX::Validator::Field->new(name => 'foo');
+$bar = MojoX::Validator::Field->new(name => 'bar');
+
 ok(!$condition->match({}));
 $foo->value('bar');
 ok(!$condition->match({foo => $foo}));
@@ -33,8 +36,23 @@ ok($condition->match({foo => $foo, bar => $bar}));
 $foo->multiple(1)->value([qw/bar baz/]);
 ok($condition->match({foo => $foo, bar => $bar}));
 
+$foo = MojoX::Validator::Field->new(name => 'foo');
+$bar = MojoX::Validator::Field->new(name => 'bar');
+
+ok(!$condition->match({}));
+$foo->value('bar');
+ok(!$condition->match({foo => $foo}));
+$bar->value('foo');
+ok(!$condition->match({bar => $bar}));
+ok($condition->match({foo => $foo, bar => $bar}));
+$foo->multiple(1)->value(qw/bar baz/);
+ok($condition->match({foo => $foo, bar => $bar}));
+
 $condition = MojoX::Validator::Condition->new;
 $condition->when('foo')->regexp(qr/^\d+$/)->length(1, 3);
+
+$foo = MojoX::Validator::Field->new(name => 'foo');
+$bar = MojoX::Validator::Field->new(name => 'bar');
 
 ok(!$condition->match({}));
 $foo->value('bar');
@@ -47,6 +65,9 @@ ok($condition->match({foo => $foo}));
 $condition = MojoX::Validator::Condition->new;
 $condition->when('foo')->regexp(qr/^\d+$/)->length(1, 3);
 
+$foo = MojoX::Validator::Field->new(name => 'foo');
+$bar = MojoX::Validator::Field->new(name => 'bar');
+
 $foo->error('Required');
 ok(!$condition->match({foo => $foo}));
 $foo->clear_error;
@@ -54,6 +75,9 @@ $foo->clear_error;
 $condition = MojoX::Validator::Condition->new;
 $condition->when('foo')->regexp(qr/^\d+$/)->length(1, 3)->when('bar')
   ->regexp(qr/^\d+$/);
+ 
+$foo = MojoX::Validator::Field->new(name => 'foo');
+$bar = MojoX::Validator::Field->new(name => 'bar');
 
 ok(!$condition->match({}));
 $foo->value('bar');

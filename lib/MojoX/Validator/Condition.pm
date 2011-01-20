@@ -16,8 +16,7 @@ sub length {shift->constraint('length' => @_)}
 
 sub when {
     my $self   = shift;
-    my $fields = shift;
-    $fields = [$fields] unless ref($fields) eq 'ARRAY';
+    my $fields = ref $_[0] eq 'ARRAY' ? shift : [@_];
 
     my $bulk = {fields => $fields, constraints => []};
     push @{$self->bulks}, $bulk;
