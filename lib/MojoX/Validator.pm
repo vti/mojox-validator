@@ -263,7 +263,7 @@ generation, B<NO> other stuff that does something else. Only data validation!
 
 =over 4
 
-    A value is considered empty when its value is B<NOT> C<undef>, C<''> or
+    A value is considered empty when its value is C<undef>, C<''> or
     contains only spaces.
 
     If a value is not required and during validation is empty there is B<NO>
