@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 15;
+use Test::More tests => 16;
 
 use MojoX::Validator;
 
@@ -47,3 +47,7 @@ $validator = MojoX::Validator->new;
 $validator->field('firstname');
 ok($validator->validate({firstname => ''}));
 is_deeply($validator->values, {firstname => ''});
+
+$validator = MojoX::Validator->new;
+$validator->field('tags')->multiple(1, 10);
+ok($validator->validate({}));

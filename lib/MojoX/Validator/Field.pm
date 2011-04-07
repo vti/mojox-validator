@@ -100,6 +100,8 @@ sub is_valid {
     $self->error($self->_message('REQUIRED')), return 0
       if $self->required && $self->is_empty;
 
+    return 1 if $self->is_empty;
+
     my @values = $self->multiple ? @{$self->value} : $self->value;
 
     @values = map { &{$self->inflate} } @values if $self->inflate;
@@ -112,8 +114,6 @@ sub is_valid {
         $self->error($self->_message('TOO_MUCH')), return 0
           if defined $max ? @values > $max : $min != 1 && @values != $min;
     }
-
-    return 1 if $self->is_empty;
 
     foreach my $c (@{$self->constraints}) {
         if ($c->is_multiple) {
@@ -172,6 +172,10 @@ sub is_empty {
     my ($self) = @_;
 
     return 1 unless $self->is_defined;
+
+    if (ref $self->value eq 'ARRAY') {
+        return @{$self->value} == 0;
+    }
 
     return $self->value eq '' ? 1 : 0;
 }
