@@ -46,9 +46,7 @@ sub _message {
     my $message = shift;
     my $params  = shift || [];
 
-    if ($self->{message}) {
-        return sprintf($self->{message}, @$params) if $self->{message};
-    }
+    return sprintf($self->{message}, @$params) if $self->{message};
 
     return $self->messages->{$message} || $message;
 }
