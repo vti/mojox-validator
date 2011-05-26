@@ -1,1 +1,5 @@
 Revision history for perl module MojoX::Validator
+
+0.0013 2011-05-26
+
+ - Use Input::Validator
