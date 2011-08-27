@@ -128,7 +128,7 @@ Mojolicious::Plugin::Validator - Plugin for MojoX::Validator
     __DATA__
 
     @@ user.html.ep
-    %= if (validator_has_errors) {
+    % if (validator_has_errors) {
         <div class="error">Please, correct the errors below.</div>
     % }
     %= form_for 'user' => begin
@@ -195,7 +195,7 @@ Validate parameters with provided validator and automatically set errors.
 
 =item validator_has_errors
 
-    %= if (validator_has_errors) {
+    % if (validator_has_errors) {
         <div class="error">Please, correct the errors below.</div>
     % }
 
@@ -217,7 +217,7 @@ Render the appropriate error.
 
 =item validator_has_unknown_params
 
-    %= if (validator_has_unknown_params) {
+    % if (validator_has_unknown_params) {
         <div class="error">Unspecified parameters were detected.</div>
     % }
 
