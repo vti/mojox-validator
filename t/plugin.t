@@ -111,18 +111,18 @@ my $t = Test::Mojo->new;
 #$ENV{MOJO_LOG_LEVEL} = 'debug';
 
 for my $path ('', 'custom', 'decamelized') {
-    $t->post_form_ok("/$path" => {})->status_is(200)
+    $t->post_ok("/$path" => form => {})->status_is(200)
       ->content_like(qr/required/i);
-    $t->post_form_ok("/$path" => {foo => '12345678901'})->status_is(200)
+    $t->post_ok("/$path" => form => {foo => '12345678901'})->status_is(200)
       ->content_like(qr/length/i);
-    $t->post_form_ok("/$path" => {foo => '123'})->status_is(200)
+    $t->post_ok("/$path" => form => {foo => '123'})->status_is(200)
       ->content_like(qr/ok/i);
 }
 
-$t->post_form_ok('/wrong-isa' => {})->status_is(500);
-$t->post_form_ok('/broken'    => {})->status_is(500);
+$t->post_ok('/wrong-isa' => form => {})->status_is(500);
+$t->post_ok('/broken'    => form => {})->status_is(500);
 
-$t->post_form_ok('/has-unknown-params' => { not => 'specified' })
+$t->post_ok('/has-unknown-params' => form => { not => 'specified' })
   ->status_is(501)
   ->content_is("1\n");
 
