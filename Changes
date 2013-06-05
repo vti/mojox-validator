@@ -1,5 +1,10 @@
 Revision history for perl module MojoX::Validator
 
+0.0014 2011-05-26
+
+ - Fixes due to Mojolicious api change (JEEN Lee)
+ - Fix documentation (Bedivere)
+
 0.0013 2011-05-26
 
  - Use Input::Validator

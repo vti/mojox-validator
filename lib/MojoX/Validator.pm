@@ -5,7 +5,7 @@ use warnings;
 
 use base 'Input::Validator';
 
-our $VERSION = '0.0013';
+our $VERSION = '0.0014';
 
 1;
 __END__
@@ -43,13 +43,29 @@ MojoX::Validator - Validator for Mojolicious
 
 A wrapper around L<Input::Validator>. See original documentation.
 
+=head1 CREDITS
+
+Yaroslav Korshak (yko)
+
+forwardever
+
+vaneska
+
+Glen Hinkle
+
+Alex Voronov
+
+Bedivere
+
+JEEN Lee
+
 =head1 AUTHOR
 
 Viacheslav Tykhanovskyi, C<vti@cpan.org>.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2011, Viacheslav Tykhanovskyi.
+Copyright (C) 2011-2013, Viacheslav Tykhanovskyi.
 
 This program is free software, you can redistribute it and/or modify it under
 the terms of the Artistic License version 2.0.
