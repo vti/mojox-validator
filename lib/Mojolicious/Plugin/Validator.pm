@@ -16,11 +16,18 @@ sub register {
 
     $conf ||= {};
     my $store = delete $conf->{use_flash} ? 'flash' : 'stash';
+    my $class_cb = delete $conf->{class_cb};
+
+    Carp::croak('class_cb must be a sub ref')
+        if $class_cb and ref $class_cb ne 'CODE';
 
     $app->helper(
         create_validator => sub {
             my $self       = shift;
             my $class_name = shift;
+
+            $class_name = $class_cb->()
+              if !$class_name && $class_cb;
 
             $class_name ||= 'MojoX::Validator';
 
