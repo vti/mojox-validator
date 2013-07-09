@@ -14,14 +14,18 @@ use strict;
 use warnings;
 
 use Test::More;
+use Test::Exception;
 
 plan skip_all => 'working sockets required for this test!'
   unless Mojo::IOLoop->new->generate_port;
-plan tests => 2;
+plan tests => 3;
 
 use Mojolicious::Lite;
 
-plugin 'validator' => {class_cb => sub { 'FooValidator' }};
+throws_ok { plugin 'validator' => {class_cb => {}} }
+  qr/class_cb must be a CODE ref/i;
+
+plugin 'validator' => {class_cb => sub {'FooValidator'}};
 
 my $validator; # Closure!
 get '/foo' => sub {

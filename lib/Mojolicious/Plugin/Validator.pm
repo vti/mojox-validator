@@ -15,16 +15,19 @@ sub register {
     my ($self, $app, $conf) = @_;
 
     $conf ||= {};
-    my $store = delete $conf->{use_flash} ? 'flash' : 'stash';
+    my $store    = delete $conf->{use_flash} ? 'flash' : 'stash';
     my $class_cb = delete $conf->{class_cb};
 
-    Carp::croak('class_cb must be a sub ref')
+    Carp::croak('class_cb must be a CODE ref')
         if $class_cb and ref $class_cb ne 'CODE';
 
     $app->helper(
         create_validator => sub {
             my $self       = shift;
             my $class_name = shift;
+
+            # IDEA: Should we be invoking the
+            # callback on the controller itself?
 
             $class_name = $class_cb->()
               if !$class_name && $class_cb;
