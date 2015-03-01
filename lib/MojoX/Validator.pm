@@ -5,7 +5,7 @@ use warnings;
 
 use base 'Input::Validator';
 
-our $VERSION = '0.0014';
+our $VERSION = '0.0016';
 
 1;
 __END__
