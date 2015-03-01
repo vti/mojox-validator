@@ -6,7 +6,7 @@ use warnings;
 use base 'Mojolicious::Plugin';
 
 use Mojo::ByteStream;
-use Mojo::Loader;
+use Mojo::Loader qw(load_class);
 use MojoX::Validator;
 
 require Carp;
@@ -31,7 +31,7 @@ sub register {
                   Mojo::ByteStream->new($class_name)->camelize;
             }
 
-            my $e = Mojo::Loader->new->load($class_name);
+            my $e = load_class($class_name);
 
             Carp::croak qq/Can't load validator '$class_name': / . $e->message
               if ref $e;

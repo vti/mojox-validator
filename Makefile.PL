@@ -38,7 +38,7 @@ WriteMakefile(
 
     PREREQ_PM => {
         'Input::Validator' => '0',
-        'Mojolicious'      => '0.999931',
+        'Mojolicious'      => '5.81',
     },
     test => {TESTS => 't/*.t t/*/*.t t/*/*/*.t t/*/*/*/*.t'}
 );
