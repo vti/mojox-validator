@@ -15,11 +15,22 @@ sub register {
     my ($self, $app, $conf) = @_;
 
     $conf ||= {};
+    my $store    = delete $conf->{use_flash} ? 'flash' : 'stash';
+    my $class_cb = delete $conf->{class_cb};
+
+    Carp::croak('class_cb must be a CODE ref')
+        if $class_cb and ref $class_cb ne 'CODE';
 
     $app->helper(
         create_validator => sub {
             my $self       = shift;
             my $class_name = shift;
+
+            # IDEA: Should we be invoking the
+            # callback on the controller itself?
+
+            $class_name = $class_cb->()
+              if !$class_name && $class_cb;
 
             $class_name ||= 'MojoX::Validator';
 
@@ -55,8 +66,8 @@ sub register {
 
             return 1 if $validator->validate($params);
 
-            $self->stash(validator_errors => $validator->errors);
-            $self->stash(validator_has_unknown_params =>
+            $self->$store(validator_errors => $validator->errors);
+            $self->$store(validator_has_unknown_params =>
                   $validator->has_unknown_params);
 
             return;
@@ -64,13 +75,13 @@ sub register {
     );
 
     $app->helper(validator_has_unknown_params =>
-          sub { shift->stash('validator_has_unknown_params') });
+          sub { shift->$store('validator_has_unknown_params') });
 
     $app->helper(
         validator_has_errors => sub {
             my $self = shift;
 
-            my $errors = $self->stash('validator_errors');
+            my $errors = $self->$store('validator_errors');
 
             return 0 if !$errors || !keys %$errors;
 
@@ -83,7 +94,7 @@ sub register {
             my $self = shift;
             my $name = shift;
 
-            return unless my $errors = $self->stash('validator_errors');
+            return unless my $errors = $self->$store('validator_errors');
 
             return unless my $message = $errors->{$name};
 
@@ -152,13 +163,14 @@ simplifies parameters validation.
 
     # Mojolicious::Lite
     plugin 'validator' => {
-        messages => {
+        messages => {                # Replace default errors.
+
             REQUIRED                 => 'This field is required',
             LENGTH_CONSTRAINT_FAILED => 'Too big'
-        }
-    };
 
-Replace default errors.
+        },
+        use_flash => 1,              # Write to flash instead of stash
+    };
 
 =back
 
